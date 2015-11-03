@@ -10,14 +10,18 @@
   (djula:render-template*
    (djula:compile-template* (probe-file (format nil "~A/~A" *views* path)))))
 
+(defun hook (m o)
+  (format t "~a:~a~%" m o)
+  o)
+
 (defun read-file (name)
   (let* ((ret "")
-        (path (format nil "~A/~A" *static* name))
-        (in (open path :if-does-not-exist nil)))
+         (path (format nil "~A/~A" *static* name))
+         (in (open path :if-does-not-exist nil)))
     (if in
         (progn
           (loop for line = (read-line in nil)
-                while line do (setf ret (format t "~a~%~a" ret line)))
+                while line do (setf ret (format nil "~a~%~a" ret line)))
           (close in)
           ret)
       "NotFound")))
