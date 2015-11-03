@@ -59,15 +59,15 @@
   (let ((routing-list '()))
     (dolist (route routes)
       (push
-       (cond
-        ((equal +notfound+ (nth 0 route))
-         `(T
-           ,(nth 2 route)))
-        (T
-         `((and (string= (getf ,env :path-info)
-                         ,(nth 1 route))
-                (string= (getf ,env :request-method)
-                         ,(string (nth 0 route))))
-           ,(nth 2 route))))
+       `(,@(cond
+           ((equal +notfound+ (nth 0 route))
+            `(T))
+           (T
+            `((and (string= (getf ,env :path-info)
+                            ,(nth 1 route))
+                   (string= (getf ,env :request-method)
+                            ,(string (nth 0 route)))))))
+         ,(nth 2 route))
        routing-list))
     `(cond ,@routing-list)))
+
