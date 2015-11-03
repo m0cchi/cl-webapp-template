@@ -28,24 +28,18 @@
   (setq func (reverse func)))
 
 (defmacro defroutes (name &rest routes)
-  (format t "~%------defroutes:~A~%" routes)
   (let ((routing-list '()))
     (dolist (route routes)
       (push
        `((and (string= (getf env :path-info)
-                       ,(hook "path-info" (nth 1 route)))
+                       ,(nth 1 route))
               (string= (getf env :request-method)
-                       ,(hook "req-method" (string (nth 0 route)))))
+                       ,(string (nth 0 route))))
          ((lambda ()
-           ,(nth 3 route))))
+            ,(nth 3 route))))
        routing-list))
-    (format t "routing-list:~A~%" routing-list)
-    (format t "------%")
-    (hook "return"
     (list 'defun name '(env)
-          '(format t "defun-call-main")
-          '(format t "~%ENV----~A~%" env)
-          `(cond ,@routing-list)))))
+          `(cond ,@routing-list))))
 #|
 (defun m (mes obj)
   (format t "~A:~A~%" mes obj)
