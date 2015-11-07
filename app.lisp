@@ -10,10 +10,6 @@
   (djula:render-template*
    (djula:compile-template* (probe-file (format nil "~A/~A" *views* path)))))
 
-(defun hook (m o)
-  (format t "~a:~a~%" m o)
-  o)
-
 (defun read-file (name)
   (let* ((ret "")
          (path (format nil "~A/~A" *static* name))
@@ -21,13 +17,12 @@
     (if in
         (progn
           (loop for line = (read-line in nil)
-                while line do (setf ret (format nil "~a~%~a" ret line)))
+                while line do (setf ret (format nil "~a~a~%" ret line)))
           (close in)
-          ret)
-      "NotFound")))
+          (woo.lwrap:response ret))
+      (woo.lwrap:response "NotFound" :status 404))))
 
 (defun is-static-file (path)
-  (format t "runnable:~a~%" path)
   (unless (equal NIL
                  (ppcre:scan "^(?:/images/|/css/|.*\\.html$|/js/)"
                              path))
@@ -38,7 +33,7 @@
   (woo.lwrap:defroutes
    env
    (:notfound (woo.lwrap:response "NotFound" :status 404))
-   (:static-file #'is-static-file (woo.lwrap:response (read-file (getf env :path-info))))
+   (:static-file #'is-static-file (read-file (getf env :path-info)))
    (:get "/env" (woo.lwrap:response (format nil "~a"
                                             (woo.lwrap:parse-uri-params env))))
    (:get "/get" (woo.lwrap:response "get-hello"))
