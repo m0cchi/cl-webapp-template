@@ -23,11 +23,9 @@
       (woo.lwrap:response "NotFound" :status 404))))
 
 (defun is-static-file (path)
-  (unless (equal NIL
-                 (ppcre:scan "^(?:/images/|/css/|.*\\.html$|/js/)"
-                             path))
-    NIL
-    T))
+  (not (equal NIL
+              (ppcre:scan "^(?:/images/|/css/|.*\\.html$|/js/)"
+                          path))))
 
 (defun app (env)
   (woo.lwrap:defroutes
