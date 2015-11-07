@@ -1,3 +1,4 @@
+(require 'woo.lwrap.util "woo-lwrap-util")
 (provide 'woo.lwrap)
 
 (defpackage :woo.lwrap
@@ -10,37 +11,11 @@
 (defvar +notfound+ :notfound)
 (defvar +static-file+ :static-file)
 
-(defun make-keyword (name)
-  (values
-   (intern 
-    (string-upcase name)
-    :keyword)))
-
-(defun split-string (word string)
-  (let ((i (search word string))
-        (retval '()))
-    (if i
-        (progn
-          (setq retval (list (subseq string 0 i)))
-          (let* ((retval2 (split-string word
-                                        (subseq string (+ i 1)))))
-            (setq  retval `(,@retval ,@retval2))))
-      (setq retval (list string)))
-    retval))
-
-(defun make-map (params)
-  (if (= 0
-         (mod (list-length params) 2))
-      (dotimes (i (/ (list-length params) 2))
-        (setf (nth (* i 2) params)
-              (make-keyword (nth (* i 2) params)))))
-  params)
-
 (defun parse-params (request-param)
   (let ((params '()))
-    (dolist (param (split-string "&" request-param))
-      (setq params `(,@params ,@(split-string "=" param))))
-    (make-map params)))
+    (dolist (param (woo.lwrap.util:split-string "&" request-param))
+      (setq params `(,@params ,@(woo.lwrap.util:split-string "=" param))))
+    (woo.lwrap.util:make-map params)))
 
 (defun parse-query (request-uri)
   (let ((i (search "?" request-uri)))
