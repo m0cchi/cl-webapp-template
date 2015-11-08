@@ -22,8 +22,7 @@
    (djula:compile-template* (probe-file (format nil "~A/~A" *views* path)))))
 
 (defun read-file (name)
-  (let* ((ret "")
-         (path (format nil "~A/~A" *static* name))
+  (let* ((path (format nil "~A/~A" *static* name))
          (file (uiop:file-exists-p path)))
     (if file
         (response-with-file file)
