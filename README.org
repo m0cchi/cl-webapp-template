@@ -1,0 +1,8 @@
+#+title: cl-webapp-template
+
+#+begin_src+ shell
+git clone git@github.com:mocchit/cl-webapp-template.git
+cd cl-webapp-template
+ros install clack
+clackup --server :woo --port 30001 --address 0.0.0.0 --worker-num 4 --debug nil app.lisp
+#+end_src
