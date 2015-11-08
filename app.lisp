@@ -1,7 +1,18 @@
-(ql:quickload '(:djula
+(ql:quickload '(:uiop
+                :djula
                 :cl-ppcre))
 
 (require `woo.lwrap "woo-lwrap")
+
+(defpackage :app
+  (:use :cl)
+  (:import-from :woo.lwrap
+                :defroutes
+                :parse-uri-params
+                :response-with-file
+                :response-with-text)
+  (:export app))
+(in-package :app)
 
 (defvar *views* "./views")
 (defvar *static* "./static")
@@ -13,14 +24,10 @@
 (defun read-file (name)
   (let* ((ret "")
          (path (format nil "~A/~A" *static* name))
-         (in (open path :if-does-not-exist nil)))
-    (if in
-        (progn
-          (loop for line = (read-line in nil)
-                while line do (setf ret (format nil "~a~a~%" ret line)))
-          (close in)
-          (woo.lwrap:response ret))
-      (woo.lwrap:response "NotFound" :status 404))))
+         (file (uiop:file-exists-p path)))
+    (if file
+        (response-with-file file)
+      (response-with-text "NotFound" :status 404))))
 
 (defun is-static-file (path)
   (not (equal NIL
@@ -30,9 +37,9 @@
 (defun app (env)
   (woo.lwrap:defroutes
    env
-   (:notfound (woo.lwrap:response "NotFound" :status 404))
+   (:notfound (response-with-text "NotFound" :status 404))
    (:static-file #'is-static-file (read-file (getf env :path-info)))
-   (:get "/env" (woo.lwrap:response (format nil "~a"
-                                            (woo.lwrap:parse-uri-params env))))
-   (:get "/get" (woo.lwrap:response "get-hello"))
-   (:get "/" (woo.lwrap:response (render "top.html")))))
+   (:get "/env" (response-with-text (format nil "~a"
+                                            (parse-uri-params env))))
+   (:get "/get" (response-with-text "get-hello"))
+   (:get "/" (response-with-text (render "top.html")))))
