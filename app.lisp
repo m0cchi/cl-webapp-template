@@ -2,11 +2,11 @@
                 :djula
                 :cl-ppcre))
 
-(require `woo.lwrap "woo-lwrap")
+(require `lwrap "lwrap")
 
 (defpackage :app
   (:use :cl)
-  (:import-from :woo.lwrap
+  (:import-from :lwrap
                 :defroutes
                 :parse-uri-params
                 :response-with-file
@@ -34,7 +34,7 @@
                           path))))
 
 (defun app (env)
-  (woo.lwrap:defroutes
+  (lwrap:defroutes
    env
    (:notfound (response-with-text "NotFound" :status 404))
    (:static-file #'is-static-file (read-file (getf env :path-info)))

@@ -1,12 +1,12 @@
 (in-package :cl-user)
 
-(provide 'woo.lwrap.util)
+(provide 'lwrap.util)
 
-(defpackage :woo.lwrap.util
+(defpackage :lwrap.util
   (:use :cl)
   (:export make-keyword split-string make-map))
 
-(in-package :woo.lwrap.util)
+(in-package :lwrap.util)
 
 (defun make-keyword (name)
   (values

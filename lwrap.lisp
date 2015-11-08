@@ -1,14 +1,14 @@
 (in-package :cl-user)
 
-(provide 'woo.lwrap)
-(require 'woo.lwrap.util "woo-lwrap-util")
+(provide 'lwrap)
+(require 'lwrap.util "lwrap-util")
 (ql:quickload '(:babel
                 :trivial-mimes
                 :local-time))
 
-(defpackage :woo.lwrap
+(defpackage :lwrap
   (:use :cl)
-  (:import-from :woo.lwrap.util
+  (:import-from :lwrap.util
                 :split-string
                 :make-map)
   (:import-from :babel
@@ -20,7 +20,7 @@
                 :format-rfc1123-timestring)
   (:export parse-uri-params parse-query response-with-text response-with-file defroutes))
 
-(in-package :woo.lwrap)
+(in-package :lwrap)
 
 (defvar *special-request* '(:notfound))
 (defvar +notfound+ :notfound)
