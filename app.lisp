@@ -34,7 +34,7 @@
                           path))))
 
 (defun app (env)
-  (lwrap:defroutes
+  (defroutes
    env
    (:notfound (response-with-text "NotFound" :status 404))
    (:static-file #'is-static-file (read-file (getf env :path-info)))
